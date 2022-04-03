@@ -4,15 +4,27 @@ namespace AbstartFactory
 {
     public class MasalaCooker
     {
-        private ICooker cooker;
+        private readonly ICooker _cooker;
 
         public MasalaCooker(ICooker cooker)
         {
-            this.cooker = cooker;
+            _cooker = cooker;
         }
 
         public void CookMasala(DateTime currentDate, Country country)
         {
+            ICookerFactory factory;
+            if (IsSummerDate(currentDate))
+            {
+                factory = new CookerSummerFactory(_cooker);
+            }
+            else
+            {
+                factory = new CookerFactory(_cooker);
+            }
+
+            var countryCooker = factory.CreateCooker(country);
+            countryCooker.CookMasala();
         }
 
         private bool IsSummerDate(DateTime currentDate)
