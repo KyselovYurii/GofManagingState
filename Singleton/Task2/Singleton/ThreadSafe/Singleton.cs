@@ -2,14 +2,29 @@
 
 namespace Singleton.ThreadSafe
 {
-    public class Singleton
+    public sealed class Singleton
     {
+        private static volatile Singleton instance;
+        private static readonly object syncRoot = new object();
+
+        Singleton() { }
+
         public static Singleton Instance
         {
             get
             {
-                // TODO: Return single instance, thread safe with lock
-                throw new NotImplementedException();
+                if (instance == null)
+                {
+                    lock (syncRoot)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new Singleton();
+                        }
+                    }
+                }
+
+                return instance;
             }
         }
     }
