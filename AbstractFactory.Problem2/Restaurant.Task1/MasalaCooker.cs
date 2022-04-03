@@ -1,18 +1,20 @@
-﻿using System;
-
-namespace AbstartFactory
+﻿namespace AbstartFactory
 {
     public class MasalaCooker
     {
-        private ICooker cooker;
+        private readonly ICooker _cooker;
+        private readonly CookerFactory _cookerFactory;
 
         public MasalaCooker(ICooker cooker)
         {
-            this.cooker = cooker;
+            _cooker = cooker;
+            _cookerFactory = new CookerFactory(_cooker);
         }
 
         public void CookMasala(Country country)
         {
+            var usedCooler = _cookerFactory.CreateCooker(country);
+            usedCooler.CookMasala();
         }
     }
 }
