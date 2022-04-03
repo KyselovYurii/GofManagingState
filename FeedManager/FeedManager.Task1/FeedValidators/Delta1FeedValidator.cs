@@ -1,13 +1,38 @@
 ﻿using FeedManager.Task1.Feeds;
 using FeedManager.Task1.FeedValidators;
+using System.Text.RegularExpressions;
 
 namespace FeedManager.Task1.FeedImporters
 {
-    public class Delta1FeedValidator : IFeedValidator<Delta1Feed>
+    public class Delta1FeedValidator : BaseFeedValidator, IFeedValidator<Delta1Feed>
     {
+        private readonly Regex _isInRegex = new Regex("[A-Z]{2,}\\d{10,}$");
+
         public ValidateResult Validate(Delta1Feed feed)
         {
-            throw new System.NotImplementedException();
+            validateResult = new ValidateResult();
+            ValidateIds(feed);
+            ValidatePrice(feed);
+            ValidateIsin(feed);
+            ValidateDates(feed);
+            UpdateValidState();
+
+            return validateResult;
+        }
+        private void ValidateIsin(Delta1Feed feed)
+        {
+            if (!_isInRegex.IsMatch(feed.Isin))
+            {
+                validateResult.Errors.Add(ErrorCode.NotValidIsin);
+            }
+        }
+
+        private void ValidateDates(Delta1Feed feed)
+        {
+            if (feed.MaturityDate <= feed.ValuationDate)
+            {
+                validateResult.Errors.Add("MaturityDate should be bigger than ValuationDate");
+            }
         }
     }
 }
