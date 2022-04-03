@@ -1,16 +1,11 @@
-﻿using System;
-
-namespace Singleton.ThreadSafe
+﻿namespace Singleton.ThreadSafe
 {
     public class Singleton
     {
-        public static Singleton Instance
-        {
-            get
-            {
-                // TODO: Return single instance, no thread safe
-                throw new NotImplementedException();
-            }
-        }
+        private static readonly Singleton instance = new Singleton();
+
+        private Singleton() { }
+
+        public static Singleton Instance => instance;
     }
 }
